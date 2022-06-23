@@ -13,8 +13,16 @@ let question_number = document.getElementById("question_number");
 let answerBox = document.getElementById("answer");
 let timer_view = document.getElementById("timer_seconds");
 
+/**
+ * variables
+ */
 var savedName;
 let questionNum = 1;
+let rightAnswers = 0;
+let wrongAnswers = 0;
+let maxSeconds = 25;
+
+// Question Bank
 let quizBank = [
   {
     question: "What is not a data type supported by JavaScript?",
@@ -43,25 +51,59 @@ let quizBank = [
   },
 ];
 let totalQs = quizBank.length;
-let maxSeconds = 25;
-const checkAndSaveInput = () => {};
-const showQuestions = () => {
+
+/**
+ * Function that changes UI based on question number, question, and timer. Also sets answer buttons for each question
+ */
+const showQuestion = () => {
   // show question_numbers
   question_number.innerHTML = "Question " + questionNum + " of " + totalQs;
+  //show timer
   timer_view.innerHTML = maxSeconds + "s";
+  //show question from quizBank
   question_field.innerHTML = quizBank[questionNum - 1].question;
+  //similar to display:none
   nameVal.remove();
+  //similar to display:none
   startGameBtn.remove();
+  answerBox.innerHTML = "";
 
-  // answers
+  // options is the array of options
   let options = quizBank[questionNum - 1].options;
+
+  //give answer button an element for each index and style it
   for (let i = 0; i < options.length; i++) {
     let answerBtn = document.createElement("button");
     answerBtn.innerHTML = options[i];
     answerBox.appendChild(answerBtn);
     answerBox.classList.add("answer_box");
     answerBtn.classList = "answer_btn";
+    // add onclick event listener
+    answerBtn.addEventListener("click", checkAnswer);
   }
+};
+/**
+ * Function that checks if answer is right wrong, continues to next question
+ * @param {*} e
+ */
+const checkAnswer = (e) => {
+  let userAnswer = e.target.innerHTML;
+  if (userAnswer === quizBank[questionNum - 1].answer) {
+    rightAnswers++;
+    goToNextQuestion();
+  } else {
+    wrongAnswers++;
+    goToNextQuestion();
+  }
+};
+/**
+ * Function increment question number and show question
+ */
+const goToNextQuestion = () => {
+  // increment question number
+  questionNum++;
+  console.log(questionNum);
+  showQuestion();
 };
 const playGame = () => {
   if (nameVal.value) {
@@ -70,6 +112,13 @@ const playGame = () => {
     alert("Please enter your name!");
   }
 
-  showQuestions();
+  showQuestion();
 };
 startGameBtn.addEventListener("click", playGame);
+
+/**
+ * TODO
+ * Local storage for high score
+ *
+ * BUG: goes past # of total questions
+ */
