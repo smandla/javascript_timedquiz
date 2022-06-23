@@ -21,7 +21,7 @@ let questionNum = 1;
 let rightAnswers = 0;
 let wrongAnswers = 0;
 let maxSeconds = 25;
-
+let totalAnswered;
 // Question Bank
 let quizBank = [
   {
@@ -94,12 +94,13 @@ const checkAnswer = (e) => {
     goToNextQuestion();
   } else {
     wrongAnswers++;
-    maxSeconds -= 10;
+
     if (maxSeconds <= 0) {
       answerBox.innerHTML = "";
       //   gameIsOver();
       //   break;
     }
+    maxSeconds -= 10;
 
     goToNextQuestion();
   }
@@ -115,8 +116,8 @@ const goToNextQuestion = () => {
     console.log(questionNum);
     showQuestion();
   } else {
-    maxSeconds = 0;
-    // gameIsOver();
+    // maxSeconds = 0;
+    gameIsOver();
   }
 };
 const playGame = () => {
@@ -135,10 +136,13 @@ const startTimer = () => {
     console.log(maxSeconds);
     //decremement maxSeconds
     maxSeconds--;
+    // if()
     //change ui everytime timer changes
     timer_view.innerHTML = maxSeconds + " s";
     //when timer is less than 0
-    if (maxSeconds <= 0) {
+    //when questions answered is equal to totalQ's stop timer
+    totalAnswered = rightAnswers + wrongAnswers;
+    if (maxSeconds <= 0 || totalAnswered === totalQs) {
       clearInterval(timer);
       //game is over too
       gameIsOver();
@@ -146,7 +150,8 @@ const startTimer = () => {
   }, 1000);
 };
 const gameIsOver = () => {
-  maxSeconds = 0;
+  // maxSeconds = 0;
+  console.log(questionNum);
   answerBox.innerHTML = "";
   totalAnswered = rightAnswers + wrongAnswers;
   question_field.innerHTML =
@@ -196,7 +201,7 @@ const gameIsOver = () => {
   // };
 };
 startGameBtn.addEventListener("click", playGame);
-
+// localStorage.removeItem("highscores");
 /**
  * TODO
  * Local storage for high score
