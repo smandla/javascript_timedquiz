@@ -10,6 +10,7 @@ let question_field = document.getElementById("question_field");
 let question_number = document.getElementById("question_number");
 let answerBox = document.getElementById("answer");
 let timer_view = document.getElementById("timer_seconds");
+let highscore_area = document.getElementById("highscores");
 
 /**
  * variables
@@ -157,9 +158,16 @@ const gameIsOver = () => {
     totalQs +
     " questions";
   let userData = { user: savedName, score: rightAnswers, time: maxSeconds };
-  const highscores = [...JSON.parse(storedData), userData];
+  const highscores = [...JSON.parse(storedData), userData].sort(function (
+    a,
+    b
+  ) {
+    return b.score - a.score;
+  });
   console.log(highscores);
   localStorage.setItem("highscores", JSON.stringify(highscores));
+  highscore_area.classList.add("display");
+  //   highscore_area.style.display = "inli";
 };
 startGameBtn.addEventListener("click", playGame);
 

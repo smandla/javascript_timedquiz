@@ -105,3 +105,11 @@ hr {
   cursor: pointer;
   opacity: 0.7;
 }
+.highscores {
+  display: none;
+  /* justify-content:center */
+}
+.highscores.display {
+  display: inline-block;
+  flex-direction: column;
+}
