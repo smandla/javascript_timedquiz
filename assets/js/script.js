@@ -88,7 +88,7 @@ const showQuestion = () => {
  */
 const checkAnswer = (e) => {
   let userAnswer = e.target.innerHTML;
-  console.log(userAnswer);
+  // console.log(userAnswer);
   if (userAnswer === quizBank[questionNum - 1].answer) {
     rightAnswers++;
     goToNextQuestion();
@@ -96,8 +96,8 @@ const checkAnswer = (e) => {
     wrongAnswers++;
 
     if (maxSeconds <= 0) {
-      answerBox.innerHTML = "";
-      //   gameIsOver();
+      // answerBox.innerHTML = "";
+      gameIsOver();
       //   break;
     }
     maxSeconds -= 10;
@@ -133,7 +133,7 @@ const playGame = () => {
 
 const startTimer = () => {
   let timer = setInterval(() => {
-    console.log(maxSeconds);
+    // console.log(maxSeconds);
     //decremement maxSeconds
     maxSeconds--;
     // if()
@@ -150,8 +150,7 @@ const startTimer = () => {
   }, 1000);
 };
 const gameIsOver = () => {
-  // maxSeconds = 0;
-  console.log(questionNum);
+  // console.log(questionNum);
   answerBox.innerHTML = "";
   totalAnswered = rightAnswers + wrongAnswers;
   question_field.innerHTML =
@@ -164,7 +163,18 @@ const gameIsOver = () => {
     " correct out of " +
     totalQs +
     " questions";
-  let userData = { user: savedName, score: rightAnswers, time: maxSeconds };
+  startGameBtn.classList.add("button1");
+  answerBox.appendChild(startGameBtn);
+
+  console.log(maxSeconds);
+  if (maxSeconds < 0) {
+    maxSeconds = 0;
+  }
+  let userData = {
+    user: savedName,
+    score: rightAnswers,
+    time: maxSeconds,
+  };
   const highscores = [...JSON.parse(storedData), userData].sort(function (
     a,
     b
@@ -176,29 +186,24 @@ const gameIsOver = () => {
   highscore_area.classList.add("display");
   //   highscore_area.style.display = "inli";
   for (let i = 0; i < 5; i++) {
-    console.log(highscores[i].user, highscores[i].score);
+    // console.log(highscores[i].user, highscores[i].score);
     let table_row = document.createElement("tr");
     let user = document.createElement("td");
     let score = document.createElement("td");
+    let time = document.createElement("td");
     let user_data1 = document.createTextNode(highscores[i].user);
     let score_data2 = document.createTextNode(highscores[i].score);
+    let time_data = document.createTextNode(highscores[i].time);
 
     user.appendChild(user_data1);
     score.appendChild(score_data2);
+    time.appendChild(time_data);
     table_row.appendChild(user);
     table_row.appendChild(score);
+    table_row.appendChild(time);
     highscore_table.appendChild(table_row);
   }
-  //   for (let i = 0; i < options.length; i++) {
-  //     let answerBtn = document.createElement("button");
-  //     answerBtn.innerHTML = options[i];
-  //     answerBox.appendChild(answerBtn);
-  //     answerBox.classList.add("answer_box");
-  //     answerBtn.classList = "answer_btn";
-  //     // add onclick event listener
-  //     answerBtn.addEventListener("click", checkAnswer);
-  //   }
-  // };
+  // maxSeconds = 0;
 };
 startGameBtn.addEventListener("click", playGame);
 // localStorage.removeItem("highscores");
