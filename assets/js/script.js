@@ -51,6 +51,17 @@ const showQuestions = () => {
   timer_view.innerHTML = maxSeconds + "s";
   question_field.innerHTML = quizBank[questionNum - 1].question;
   nameVal.remove();
+  startGameBtn.remove();
+
+  // answers
+  let options = quizBank[questionNum - 1].options;
+  for (let i = 0; i < options.length; i++) {
+    let answerBtn = document.createElement("button");
+    answerBtn.innerHTML = options[i];
+    answerBox.appendChild(answerBtn);
+    answerBox.classList.add("answer_box");
+    answerBtn.classList = "answer_btn";
+  }
 };
 const playGame = () => {
   if (nameVal.value) {
