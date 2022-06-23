@@ -94,6 +94,12 @@ const checkAnswer = (e) => {
     goToNextQuestion();
   } else {
     wrongAnswers++;
+    maxSeconds -= 10;
+    if (maxSeconds <= 0) {
+      gameIsOver();
+      //   break;
+    }
+
     goToNextQuestion();
   }
 };
@@ -122,19 +128,34 @@ const playGame = () => {
   startTimer();
 };
 
-const startTimer = setInterval(() => {
-  //decremement maxSeconds
-  //change ui everytime timer changes
-
-  //when timer is less than 0
-  if (maxSeconds <= 0) {
-    clearInterval(startTimer);
-    //game is over too
-  }
-}, 1000);
+const startTimer = () => {
+  let timer = setInterval(() => {
+    console.log(maxSeconds);
+    //decremement maxSeconds
+    maxSeconds--;
+    //change ui everytime timer changes
+    timer_view.innerHTML = maxSeconds + " s";
+    //when timer is less than 0
+    if (maxSeconds <= 0) {
+      clearInterval(timer);
+      //game is over too
+      gameIsOver();
+    }
+  }, 1000);
+};
 const gameIsOver = () => {
   answerBox.innerHTML = "";
-  question_field.innerHTML = "You got " + rightAnswers + " out of " + totalQs;
+  totalAnswered = rightAnswers + wrongAnswers;
+  question_field.innerHTML =
+    "You solved " +
+    totalAnswered +
+    " out of " +
+    totalQs +
+    ". You got " +
+    rightAnswers +
+    " correct out of " +
+    totalQs +
+    " questions";
 };
 startGameBtn.addEventListener("click", playGame);
 
@@ -142,5 +163,5 @@ startGameBtn.addEventListener("click", playGame);
  * TODO
  * Local storage for high score
  *
- * BUG: goes past # of total questions
+ * BUG: negative # shows up for timer after wrong answer timer deduction
  */
