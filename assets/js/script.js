@@ -1,6 +1,4 @@
-/**
- * Set timer when start button is clicked
- */
+const storedData = localStorage.getItem("highscores") || "[]";
 //
 /**
  * When start quiz button is clicked, make sure input has a value
@@ -156,6 +154,9 @@ const gameIsOver = () => {
     " correct out of " +
     totalQs +
     " questions";
+  let userData = { user: savedName, score: rightAnswers, time: maxSeconds };
+  const highscores = [...JSON.parse(storedData), userData];
+  console.log(highscores);
 };
 startGameBtn.addEventListener("click", playGame);
 
