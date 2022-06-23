@@ -119,8 +119,19 @@ const playGame = () => {
   }
 
   showQuestion();
+  startTimer();
 };
 
+const startTimer = setInterval(() => {
+  //decremement maxSeconds
+  //change ui everytime timer changes
+
+  //when timer is less than 0
+  if (maxSeconds <= 0) {
+    clearInterval(startTimer);
+    //game is over too
+  }
+}, 1000);
 const gameIsOver = () => {
   answerBox.innerHTML = "";
   question_field.innerHTML = "You got " + rightAnswers + " out of " + totalQs;
