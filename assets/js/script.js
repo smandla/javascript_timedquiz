@@ -11,6 +11,7 @@ let question_number = document.getElementById("question_number");
 let answerBox = document.getElementById("answer");
 let timer_view = document.getElementById("timer_seconds");
 let highscore_area = document.getElementById("highscores");
+let highscore_table = document.getElementById("highscore_table");
 
 /**
  * variables
@@ -95,7 +96,8 @@ const checkAnswer = (e) => {
     wrongAnswers++;
     maxSeconds -= 10;
     if (maxSeconds <= 0) {
-      gameIsOver();
+      answerBox.innerHTML = "";
+      //   gameIsOver();
       //   break;
     }
 
@@ -113,8 +115,8 @@ const goToNextQuestion = () => {
     console.log(questionNum);
     showQuestion();
   } else {
-    // maxSeconds = 0;
-    gameIsOver();
+    maxSeconds = 0;
+    // gameIsOver();
   }
 };
 const playGame = () => {
@@ -168,6 +170,30 @@ const gameIsOver = () => {
   localStorage.setItem("highscores", JSON.stringify(highscores));
   highscore_area.classList.add("display");
   //   highscore_area.style.display = "inli";
+  for (let i = 0; i < 5; i++) {
+    console.log(highscores[i].user, highscores[i].score);
+    let table_row = document.createElement("tr");
+    let user = document.createElement("td");
+    let score = document.createElement("td");
+    let user_data1 = document.createTextNode(highscores[i].user);
+    let score_data2 = document.createTextNode(highscores[i].score);
+
+    user.appendChild(user_data1);
+    score.appendChild(score_data2);
+    table_row.appendChild(user);
+    table_row.appendChild(score);
+    highscore_table.appendChild(table_row);
+  }
+  //   for (let i = 0; i < options.length; i++) {
+  //     let answerBtn = document.createElement("button");
+  //     answerBtn.innerHTML = options[i];
+  //     answerBox.appendChild(answerBtn);
+  //     answerBox.classList.add("answer_box");
+  //     answerBtn.classList = "answer_btn";
+  //     // add onclick event listener
+  //     answerBtn.addEventListener("click", checkAnswer);
+  //   }
+  // };
 };
 startGameBtn.addEventListener("click", playGame);
 
