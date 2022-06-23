@@ -112,6 +112,7 @@ const goToNextQuestion = () => {
     console.log(questionNum);
     showQuestion();
   } else {
+    // maxSeconds = 0;
     gameIsOver();
   }
 };
@@ -142,6 +143,7 @@ const startTimer = () => {
   }, 1000);
 };
 const gameIsOver = () => {
+  maxSeconds = 0;
   answerBox.innerHTML = "";
   totalAnswered = rightAnswers + wrongAnswers;
   question_field.innerHTML =
@@ -157,6 +159,7 @@ const gameIsOver = () => {
   let userData = { user: savedName, score: rightAnswers, time: maxSeconds };
   const highscores = [...JSON.parse(storedData), userData];
   console.log(highscores);
+  localStorage.setItem("highscores", JSON.stringify(highscores));
 };
 startGameBtn.addEventListener("click", playGame);
 
@@ -165,4 +168,5 @@ startGameBtn.addEventListener("click", playGame);
  * Local storage for high score
  *
  * BUG: negative # shows up for timer after wrong answer timer deduction
+ * timer problem still...
  */
