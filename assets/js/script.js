@@ -88,6 +88,7 @@ const showQuestion = () => {
  */
 const checkAnswer = (e) => {
   let userAnswer = e.target.innerHTML;
+  console.log(userAnswer);
   if (userAnswer === quizBank[questionNum - 1].answer) {
     rightAnswers++;
     goToNextQuestion();
@@ -101,9 +102,14 @@ const checkAnswer = (e) => {
  */
 const goToNextQuestion = () => {
   // increment question number
-  questionNum++;
-  console.log(questionNum);
-  showQuestion();
+  //add condition to make sure question number is less than total number
+  if (questionNum < totalQs) {
+    questionNum++;
+    console.log(questionNum);
+    showQuestion();
+  } else {
+    gameIsOver();
+  }
 };
 const playGame = () => {
   if (nameVal.value) {
@@ -113,6 +119,11 @@ const playGame = () => {
   }
 
   showQuestion();
+};
+
+const gameIsOver = () => {
+  answerBox.innerHTML = "";
+  question_field.innerHTML = "You got " + rightAnswers + " out of " + totalQs;
 };
 startGameBtn.addEventListener("click", playGame);
 
