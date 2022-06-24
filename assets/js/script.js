@@ -22,6 +22,7 @@ let rightAnswers = 0;
 let wrongAnswers = 0;
 let maxSeconds = 25;
 let totalAnswered;
+
 // Question Bank
 let quizBank = [
   {
@@ -53,9 +54,21 @@ let quizBank = [
 let totalQs = quizBank.length;
 
 /**
+ * Function playGame()
+ *
+ */
+const playGame = () => {
+  // savedName = nameVal.value;
+  showQuestion();
+  // startTimer();
+};
+
+/**
  * Function that changes UI based on question number, question, and timer. Also sets answer buttons for each question
  */
 const showQuestion = () => {
+  // console.log(savedName);
+  // console.log(rightAnswers, wrongAnswers);
   // show question_numbers
   question_number.innerHTML = "Question " + questionNum + " of " + totalQs;
   //show timer
@@ -63,7 +76,7 @@ const showQuestion = () => {
   //show question from quizBank
   question_field.innerHTML = quizBank[questionNum - 1].question;
   //similar to display:none
-  nameVal.remove();
+  // nameVal.remove();
   //similar to display:none
   startGameBtn.remove();
   answerBox.innerHTML = "";
@@ -87,6 +100,7 @@ const showQuestion = () => {
  * @param {*} e
  */
 const checkAnswer = (e) => {
+  e.preventDefault();
   let userAnswer = e.target.innerHTML;
   // console.log(userAnswer);
   if (userAnswer === quizBank[questionNum - 1].answer) {
@@ -95,12 +109,12 @@ const checkAnswer = (e) => {
   } else {
     wrongAnswers++;
 
-    if (maxSeconds <= 0) {
-      // answerBox.innerHTML = "";
-      gameIsOver();
-      //   break;
-    }
-    maxSeconds -= 10;
+    // if (maxSeconds <= 0) {
+    //   // answerBox.innerHTML = "";
+    //   gameIsOver();
+    //   //   break;
+    // }
+    // maxSeconds -= 10;
 
     goToNextQuestion();
   }
@@ -116,39 +130,30 @@ const goToNextQuestion = () => {
     console.log(questionNum);
     showQuestion();
   } else {
-    // maxSeconds = 0;
+    console.log("game is over");
     gameIsOver();
   }
 };
-const playGame = () => {
-  if (nameVal.value) {
-    savedName = nameVal.value;
-  } else {
-    alert("Please enter your name!");
-  }
 
-  showQuestion();
-  startTimer();
-};
-
-const startTimer = () => {
-  let timer = setInterval(() => {
-    // console.log(maxSeconds);
-    //decremement maxSeconds
-    maxSeconds--;
-    // if()
-    //change ui everytime timer changes
-    timer_view.innerHTML = maxSeconds + " s";
-    //when timer is less than 0
-    //when questions answered is equal to totalQ's stop timer
-    totalAnswered = rightAnswers + wrongAnswers;
-    if (maxSeconds <= 0 || totalAnswered === totalQs) {
-      clearInterval(timer);
-      //game is over too
-      gameIsOver();
-    }
-  }, 1000);
-};
+// const startTimer = () => {
+//   let timer = setInterval(() => {
+//     // console.log(maxSeconds);
+//     //decremement maxSeconds
+//     maxSeconds--;
+//     // if()
+//     //change ui everytime timer changes
+//     timer_view.innerHTML = maxSeconds + " s";
+//     //when timer is less than 0
+//     //when questions answered is equal to totalQ's stop timer
+//     totalAnswered = rightAnswers + wrongAnswers;
+//     if (maxSeconds <= 0 || totalAnswered === totalQs) {
+//       // maxSeconds = 0;
+//       clearInterval(timer);
+//       //game is over too
+//       gameIsOver();
+//     }
+//   }, 1000);
+// };
 const gameIsOver = () => {
   // console.log(questionNum);
   answerBox.innerHTML = "";
@@ -163,10 +168,15 @@ const gameIsOver = () => {
     " correct out of " +
     totalQs +
     " questions";
-  startGameBtn.classList.add("button1");
-  answerBox.appendChild(startGameBtn);
 
-  console.log(maxSeconds);
+  let restartBtn = document.createElement("button");
+  restartBtn.innerHTML = "Restart Game";
+  restartBtn.classList.add("button1");
+  answerBox.appendChild(restartBtn);
+  restartBtn.addEventListener("click", resetGame);
+
+  // console.log(maxSeconds);
+  console.log(document.body);
   if (maxSeconds < 0) {
     maxSeconds = 0;
   }
@@ -175,17 +185,18 @@ const gameIsOver = () => {
     score: rightAnswers,
     time: maxSeconds,
   };
-  const highscores = [...JSON.parse(storedData), userData].sort(function (
-    a,
-    b
-  ) {
-    return b.score - a.score;
-  });
-  console.log(highscores);
+  const highscores = [...JSON.parse(storedData), userData]
+    .sort(function (a, b) {
+      return b.score - a.score;
+    })
+    .slice(0, 5);
+  console.log("highscores length", highscores.length);
   localStorage.setItem("highscores", JSON.stringify(highscores));
+  // highscore_area.remove();
   highscore_area.classList.add("display");
+  highscore_table.innerHTML = "";
   //   highscore_area.style.display = "inli";
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < highscores.length; i++) {
     // console.log(highscores[i].user, highscores[i].score);
     let table_row = document.createElement("tr");
     let user = document.createElement("td");
@@ -205,12 +216,32 @@ const gameIsOver = () => {
   }
   // maxSeconds = 0;
 };
+const resetGame = () => {
+  maxSeconds = 25;
+  questionNum = 1;
+  rightAnswers = 0;
+  wrongAnswers = 0;
+  // totalQs = 0;
+  // highscores.remove();
+  // highscore_area.innerHTML = "";
+  highscore_area.classList.remove("display");
+  // highscore_table.innerHTML = "";
+  playGame();
+};
 startGameBtn.addEventListener("click", playGame);
+
 // localStorage.removeItem("highscores");
+
 /**
- * TODO
- * Local storage for high score
+ *
  *
  * BUG: negative # shows up for timer after wrong answer timer deduction
  * timer problem still...
+ */
+
+/***
+ *
+ *
+ *
+ * STYLING that <input type="text" placeholder="Enter name" class="input" id="name" />
  */
