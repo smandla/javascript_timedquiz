@@ -12,6 +12,8 @@ let answerBox = document.getElementById("answer");
 let timer_view = document.getElementById("timer_seconds");
 let highscore_area = document.getElementById("highscores");
 let highscore_table = document.getElementById("highscore_table");
+let nameInput = document.createElement("input");
+let submitNameBtn = document.createElement("button");
 
 /**
  * variables
@@ -169,14 +171,43 @@ const gameIsOver = () => {
     totalQs +
     " questions";
 
-  let restartBtn = document.createElement("button");
-  restartBtn.innerHTML = "Restart Game";
-  restartBtn.classList.add("button1");
-  answerBox.appendChild(restartBtn);
-  restartBtn.addEventListener("click", resetGame);
+  // let restartBtn = document.createElement("button");
+  // restartBtn.innerHTML = "Restart Game";
+  // restartBtn.classList.add("button1");
+  // answerBox.appendChild(restartBtn);
+  // restartBtn.addEventListener("click", resetGame);
 
+  /**
+   * <input type="text" placeholder="Enter name" class="input" id="name" />
+   */
+
+  nameInput.classList.add("input");
+  nameInput.type = "text";
+  nameInput.placeholder = "Enter name";
+  answerBox.appendChild(nameInput);
+
+  submitNameBtn.classList.add("button1");
+  submitNameBtn.innerHTML = "Submit";
+  answerBox.appendChild(submitNameBtn);
+  submitNameBtn.addEventListener("click", showScores);
   // console.log(maxSeconds);
-  console.log(document.body);
+  // console.log(document.body);
+
+  // maxSeconds = 0;
+};
+
+const showScores = () => {
+  savedName = nameInput.value;
+  console.log(savedName);
+  nameInput.remove();
+  submitNameBtn.remove();
+  // submitNameBtn.addEventListener("click", resetGame);
+  let restartBtn = document.createElement("button");
+  restartBtn.classList.add("button1");
+  restartBtn.innerHTML = "Restart Game";
+  restartBtn.addEventListener("click", resetGame);
+  answerBox.appendChild(restartBtn);
+  highscore_area.classList.add("display");
   if (maxSeconds < 0) {
     maxSeconds = 0;
   }
@@ -193,7 +224,7 @@ const gameIsOver = () => {
   console.log("highscores length", highscores.length);
   localStorage.setItem("highscores", JSON.stringify(highscores));
   // highscore_area.remove();
-  highscore_area.classList.add("display");
+
   highscore_table.innerHTML = "";
   //   highscore_area.style.display = "inli";
   for (let i = 0; i < highscores.length; i++) {
@@ -214,8 +245,8 @@ const gameIsOver = () => {
     table_row.appendChild(time);
     highscore_table.appendChild(table_row);
   }
-  // maxSeconds = 0;
 };
+
 const resetGame = () => {
   maxSeconds = 25;
   questionNum = 1;
@@ -228,6 +259,7 @@ const resetGame = () => {
   // highscore_table.innerHTML = "";
   playGame();
 };
+
 startGameBtn.addEventListener("click", playGame);
 
 // localStorage.removeItem("highscores");
@@ -243,5 +275,5 @@ startGameBtn.addEventListener("click", playGame);
  *
  *
  *
- * STYLING that <input type="text" placeholder="Enter name" class="input" id="name" />
+ * STYLING that
  */
