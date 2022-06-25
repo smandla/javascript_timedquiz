@@ -62,7 +62,7 @@ let totalQs = quizBank.length;
 const playGame = () => {
   // savedName = nameVal.value;
   showQuestion();
-  // startTimer();
+  startTimer();
 };
 
 /**
@@ -116,7 +116,7 @@ const checkAnswer = (e) => {
     //   gameIsOver();
     //   //   break;
     // }
-    // maxSeconds -= 10;
+    maxSeconds -= 10;
 
     goToNextQuestion();
   }
@@ -133,43 +133,42 @@ const goToNextQuestion = () => {
     showQuestion();
   } else {
     console.log("game is over");
+    // clearInterva
     gameIsOver();
   }
 };
 
-// const startTimer = () => {
-//   let timer = setInterval(() => {
-//     // console.log(maxSeconds);
-//     //decremement maxSeconds
-//     maxSeconds--;
-//     // if()
-//     //change ui everytime timer changes
-//     timer_view.innerHTML = maxSeconds + " s";
-//     //when timer is less than 0
-//     //when questions answered is equal to totalQ's stop timer
-//     totalAnswered = rightAnswers + wrongAnswers;
-//     if (maxSeconds <= 0 || totalAnswered === totalQs) {
-//       // maxSeconds = 0;
-//       clearInterval(timer);
-//       //game is over too
-//       gameIsOver();
-//     }
-//   }, 1000);
-// };
+const startTimer = () => {
+  let timer = setInterval(() => {
+    // console.log(maxSeconds);
+    //decremement maxSeconds
+    maxSeconds--;
+    // if()
+    //change ui everytime timer changes
+    timer_view.innerHTML = maxSeconds + " s";
+    //when timer is less than 0
+    //when questions answered is equal to totalQ's stop timer
+    totalAnswered = rightAnswers + wrongAnswers;
+    if (maxSeconds <= 0) {
+      // maxSeconds = 0;
+      timer_view.innerHTML = "0 s";
+      clearInterval(timer);
+      //game is over too
+      gameIsOver();
+    }
+    if (totalAnswered === totalQs) {
+      clearInterval(timer);
+      gameIsOver();
+    }
+  }, 1000);
+};
 const gameIsOver = () => {
   // console.log(questionNum);
+  // console.log(highscores);
   answerBox.innerHTML = "";
   totalAnswered = rightAnswers + wrongAnswers;
   question_field.innerHTML =
-    "You solved " +
-    totalAnswered +
-    " out of " +
-    totalQs +
-    ". You got " +
-    rightAnswers +
-    " correct out of " +
-    totalQs +
-    " questions";
+    "You got " + rightAnswers + " correct out of " + totalQs + " questions.";
 
   // let restartBtn = document.createElement("button");
   // restartBtn.innerHTML = "Restart Game";
@@ -216,12 +215,13 @@ const showScores = () => {
     score: rightAnswers,
     time: maxSeconds,
   };
+  console.log(userData);
   const highscores = [...JSON.parse(storedData), userData]
     .sort(function (a, b) {
       return b.score - a.score;
     })
     .slice(0, 5);
-  console.log("highscores length", highscores.length);
+  console.log("highscores", highscores);
   localStorage.setItem("highscores", JSON.stringify(highscores));
   // highscore_area.remove();
 
