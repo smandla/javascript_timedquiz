@@ -1,3 +1,4 @@
+//receive data from localstorage
 const storedData = localStorage.getItem("highscores") || "[]";
 //
 /**
@@ -14,12 +15,13 @@ let highscore_area = document.getElementById("highscores");
 let highscore_table = document.getElementById("highscore_table");
 let nameInput = document.createElement("input");
 let submitNameBtn = document.createElement("button");
+let restartBtn = document.createElement("button");
 
 /**
  * variables
  */
 var savedName;
-let questionNum = 1;
+let currentQuestion = 1;
 let rightAnswers = 0;
 let wrongAnswers = 0;
 let maxSeconds = 25;
@@ -56,68 +58,66 @@ let quizBank = [
 let totalQs = quizBank.length;
 
 /**
- * Function playGame()
- *
+ * Function to play game
  */
 const playGame = () => {
-  // savedName = nameVal.value;
   showQuestion();
-  startTimer();
+  timer();
 };
 
 /**
  * Function that changes UI based on question number, question, and timer. Also sets answer buttons for each question
  */
 const showQuestion = () => {
-  // console.log(savedName);
-  // console.log(rightAnswers, wrongAnswers);
   // show question_numbers
-  question_number.innerHTML = "Question " + questionNum + " of " + totalQs;
+  question_number.innerHTML = "Question " + currentQuestion + " of " + totalQs;
   //show timer
   timer_view.innerHTML = maxSeconds + "s";
   //show question from quizBank
-  question_field.innerHTML = quizBank[questionNum - 1].question;
-  //similar to display:none
-  // nameVal.remove();
+  question_field.innerHTML = quizBank[currentQuestion - 1].question;
+
   //similar to display:none
   startGameBtn.remove();
+  //remove html inside answer box
   answerBox.innerHTML = "";
 
   // options is the array of options
-  let options = quizBank[questionNum - 1].options;
+  let options = quizBank[currentQuestion - 1].options;
 
   //give answer button an element for each index and style it
   for (let i = 0; i < options.length; i++) {
     let answerBtn = document.createElement("button");
     answerBtn.innerHTML = options[i];
+    //adds btn to answer box element
     answerBox.appendChild(answerBtn);
     answerBox.classList.add("answer_box");
     answerBtn.classList = "answer_btn";
-    // add onclick event listener
+    // add onclick event listener to check answer
     answerBtn.addEventListener("click", checkAnswer);
   }
 };
 /**
  * Function that checks if answer is right wrong, continues to next question
- * @param {*} e
+ *
  */
 const checkAnswer = (e) => {
   e.preventDefault();
+  //get the user answer from the button html
   let userAnswer = e.target.innerHTML;
-  // console.log(userAnswer);
-  if (userAnswer === quizBank[questionNum - 1].answer) {
+
+  //check to see if user answer matches actual answer
+  if (userAnswer === quizBank[currentQuestion - 1].answer) {
+    //increment right answers
     rightAnswers++;
+    //proceed to next question
     goToNextQuestion();
   } else {
+    //increment wrong answers
     wrongAnswers++;
-
-    // if (maxSeconds <= 0) {
-    //   // answerBox.innerHTML = "";
-    //   gameIsOver();
-    //   //   break;
-    // }
+    //give time penalty by 10s
     maxSeconds -= 10;
 
+    //proceed to next question
     goToNextQuestion();
   }
 };
@@ -125,131 +125,153 @@ const checkAnswer = (e) => {
  * Function increment question number and show question
  */
 const goToNextQuestion = () => {
-  // increment question number
-  //add condition to make sure question number is less than total number
-  if (questionNum < totalQs) {
-    questionNum++;
-    console.log(questionNum);
+  //if currentQuestion is less than the total # of questions...
+  if (currentQuestion < totalQs) {
+    // increment question number
+    currentQuestion++;
+
+    //display question by changing ui
     showQuestion();
   } else {
-    console.log("game is over");
-    // clearInterva
+    // game is over
     gameIsOver();
   }
 };
 
-const startTimer = () => {
-  let timer = setInterval(() => {
-    // console.log(maxSeconds);
+/**
+ * timer function
+ */
+const timer = () => {
+  let timeLeft = setInterval(() => {
     //decremement maxSeconds
     maxSeconds--;
-    // if()
     //change ui everytime timer changes
     timer_view.innerHTML = maxSeconds + " s";
     //when timer is less than 0
-    //when questions answered is equal to totalQ's stop timer
     totalAnswered = rightAnswers + wrongAnswers;
     if (maxSeconds <= 0) {
-      // maxSeconds = 0;
       timer_view.innerHTML = "0 s";
-      clearInterval(timer);
+      clearInterval(timeLeft);
       //game is over too
       gameIsOver();
     }
+    //end timer when player is done before the timer
     if (totalAnswered === totalQs) {
       clearInterval(timer);
       gameIsOver();
     }
   }, 1000);
 };
+/**
+ * Game is over function
+ * that changes ui
+ */
 const gameIsOver = () => {
-  // console.log(questionNum);
-  // console.log(highscores);
+  //remove answer btns
   answerBox.innerHTML = "";
+  //get total answered
   totalAnswered = rightAnswers + wrongAnswers;
+  //show user results
   question_field.innerHTML =
     "You got " + rightAnswers + " correct out of " + totalQs + " questions.";
 
-  // let restartBtn = document.createElement("button");
-  // restartBtn.innerHTML = "Restart Game";
-  // restartBtn.classList.add("button1");
-  // answerBox.appendChild(restartBtn);
-  // restartBtn.addEventListener("click", resetGame);
-
-  /**
-   * <input type="text" placeholder="Enter name" class="input" id="name" />
-   */
-
+  // add class and styling to name Input
   nameInput.classList.add("input");
   nameInput.type = "text";
   nameInput.placeholder = "Enter name";
   answerBox.appendChild(nameInput);
 
+  // add class and add to document
   submitNameBtn.classList.add("button1");
   submitNameBtn.innerHTML = "Submit";
   answerBox.appendChild(submitNameBtn);
   submitNameBtn.addEventListener("click", showScores);
-  // console.log(maxSeconds);
-  // console.log(document.body);
-
-  // maxSeconds = 0;
 };
 
+/**
+ * show Scores once name has been submitted
+ */
 const showScores = () => {
-  savedName = nameInput.value;
-  console.log(savedName);
-  nameInput.remove();
-  submitNameBtn.remove();
-  // submitNameBtn.addEventListener("click", resetGame);
-  let restartBtn = document.createElement("button");
-  restartBtn.classList.add("button1");
-  restartBtn.innerHTML = "Restart Game";
-  restartBtn.addEventListener("click", resetGame);
-  answerBox.appendChild(restartBtn);
-  highscore_area.classList.add("display");
-  if (maxSeconds < 0) {
-    maxSeconds = 0;
-  }
-  let userData = {
-    user: savedName,
-    score: rightAnswers,
-    time: maxSeconds,
-  };
-  console.log(userData);
-  const highscores = [...JSON.parse(storedData), userData]
-    .sort(function (a, b) {
-      return b.score - a.score;
-    })
-    .slice(0, 5);
-  console.log("highscores", highscores);
-  localStorage.setItem("highscores", JSON.stringify(highscores));
-  // highscore_area.remove();
+  //if there is no name value then alert user and recall game is over function to resubmit name
+  if (!nameInput.value) {
+    alert("Please enter your name");
+    gameIsOver();
+  } else {
+    //save user name
+    savedName = nameInput.value;
 
-  highscore_table.innerHTML = "";
-  //   highscore_area.style.display = "inli";
-  for (let i = 0; i < highscores.length; i++) {
-    // console.log(highscores[i].user, highscores[i].score);
-    let table_row = document.createElement("tr");
-    let user = document.createElement("td");
-    let score = document.createElement("td");
-    let time = document.createElement("td");
-    let user_data1 = document.createTextNode(highscores[i].user);
-    let score_data2 = document.createTextNode(highscores[i].score);
-    let time_data = document.createTextNode(highscores[i].time);
+    //change ui by removing elements
+    nameInput.remove();
+    submitNameBtn.remove();
 
-    user.appendChild(user_data1);
-    score.appendChild(score_data2);
-    time.appendChild(time_data);
-    table_row.appendChild(user);
-    table_row.appendChild(score);
-    table_row.appendChild(time);
-    highscore_table.appendChild(table_row);
+    //add class and styling and add to document
+    restartBtn.classList.add("button1");
+    restartBtn.innerHTML = "Restart Game";
+    restartBtn.addEventListener("click", resetGame);
+    answerBox.appendChild(restartBtn);
+
+    //display highscore section
+    highscore_area.classList.add("display");
+    //if maxSeconds is negative, save as 0
+    if (maxSeconds < 0) {
+      maxSeconds = 0;
+    }
+    //save user info as an object
+    let userData = {
+      user: savedName,
+      score: rightAnswers,
+      time: maxSeconds,
+    };
+    //parse data from local storage and add user data. data is sorted and only the first five are shown
+    const highscores = [...JSON.parse(storedData), userData]
+      .sort(function (a, b) {
+        return b.score - a.score;
+      })
+      .slice(0, 5);
+
+    //set the local storage item with updated high scores
+    localStorage.setItem("highscores", JSON.stringify(highscores));
+
+    highscore_table.innerHTML = "";
+    let table_columns = ["User", "Score", "Time"];
+    let table_row_titles = document.createElement("tr");
+    let user_title = document.createElement("td");
+    let score_title = document.createElement("td");
+    let time_title = document.createElement("td");
+    let user_title1 = document.createTextNode(table_columns[0]);
+    let score_title1 = document.createTextNode(table_columns[1]);
+    let time_title1 = document.createTextNode(table_columns[2]);
+    user_title.appendChild(user_title1);
+    score_title.appendChild(score_title1);
+    time_title.appendChild(time_title1);
+    table_row_titles.appendChild(user_title);
+
+    table_row_titles.appendChild(score_title);
+    table_row_titles.appendChild(time_title);
+    highscore_table.appendChild(table_row_titles); //
+    for (let i = 0; i < highscores.length; i++) {
+      let table_row = document.createElement("tr");
+      let user = document.createElement("td");
+      let score = document.createElement("td");
+      let time = document.createElement("td");
+      let user_data1 = document.createTextNode(highscores[i].user);
+      let score_data2 = document.createTextNode(highscores[i].score);
+      let time_data = document.createTextNode(highscores[i].time);
+
+      user.appendChild(user_data1);
+      score.appendChild(score_data2);
+      time.appendChild(time_data);
+      table_row.appendChild(user);
+      table_row.appendChild(score);
+      table_row.appendChild(time);
+      highscore_table.appendChild(table_row);
+    }
   }
 };
 
 const resetGame = () => {
   maxSeconds = 25;
-  questionNum = 1;
+  currentQuestion = 1;
   rightAnswers = 0;
   wrongAnswers = 0;
   // totalQs = 0;
@@ -267,13 +289,5 @@ startGameBtn.addEventListener("click", playGame);
 /**
  *
  *
- * BUG: negative # shows up for timer after wrong answer timer deduction
- * timer problem still...
- */
-
-/***
- *
- *
- *
- * STYLING that
+ * BUG: wont let me type name until timer is out
  */
