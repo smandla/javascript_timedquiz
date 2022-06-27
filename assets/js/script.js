@@ -149,17 +149,19 @@ const timer = () => {
     timer_view.innerHTML = maxSeconds + " s";
     //when timer is less than 0
     totalAnswered = rightAnswers + wrongAnswers;
+    if (totalAnswered === totalQs) {
+      // maxSeconds = 0;
+      clearInterval(timeLeft);
+      gameIsOver();
+    }
     if (maxSeconds <= 0) {
       timer_view.innerHTML = "0 s";
       clearInterval(timeLeft);
       //game is over too
       gameIsOver();
     }
+    console.log(totalAnswered, totalQs);
     //end timer when player is done before the timer
-    if (totalAnswered === totalQs) {
-      clearInterval(timer);
-      gameIsOver();
-    }
   }, 1000);
 };
 /**
@@ -248,7 +250,7 @@ const showScores = () => {
 
     table_row_titles.appendChild(score_title);
     table_row_titles.appendChild(time_title);
-    highscore_table.appendChild(table_row_titles); //
+    highscore_table.appendChild(table_row_titles);
     for (let i = 0; i < highscores.length; i++) {
       let table_row = document.createElement("tr");
       let user = document.createElement("td");
@@ -285,9 +287,3 @@ const resetGame = () => {
 startGameBtn.addEventListener("click", playGame);
 
 // localStorage.removeItem("highscores");
-
-/**
- *
- *
- * BUG: wont let me type name until timer is out
- */
