@@ -34,7 +34,7 @@ A timed JavaScript Based MC Quiz. User can start the game and attempt to answer 
 
 ### Code Snippet
 
-![alt text](assets/images/code_snippet.png)
+![alt text](assets/images/codesnippet.png)
 
 #### Function displays question based on certain variables and updates the look of the UI. For loop that creates buttons for each option.
 
