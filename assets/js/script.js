@@ -160,7 +160,6 @@ const timer = () => {
       //game is over too
       gameIsOver();
     }
-    console.log(totalAnswered, totalQs);
     //end timer when player is done before the timer
   }, 1000);
 };
