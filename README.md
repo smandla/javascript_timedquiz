@@ -30,17 +30,17 @@ A timed JavaScript Based MC Quiz. User can start the game and attempt to answer 
 
 ### Website Demo
 
-![alt text](assets/demo.gif)
+![alt text](assets/images/demo.gif)
 
 ### Code Snippet
 
-![alt text](assets/code_snippet.png)
+![alt text](assets/images/code_snippet.png)
 
 #### Function displays question based on certain variables and updates the look of the UI. For loop that creates buttons for each option.
 
 ## User Information
 
-[LinkedIn](https://www.linkedin.com/in/srikavya-mandla/)
+[LinkedIn](https://www.linkedin.com/in/srikavya-mandla/) |
 [Portfolio](https://smandla.github.io/kavya_professionalportfolio/)
 
 ## Credits
